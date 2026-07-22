@@ -4,9 +4,10 @@ FROM php:8.3-apache
 RUN apt-get update && apt-get install -y \
     libpq-dev \
     libzip-dev \
+    libicu-dev \
     unzip \
     git \
-    && docker-php-ext-install pdo pdo_pgsql zip
+    && docker-php-ext-install pdo pdo_pgsql zip intl
 
 # Activer mod_rewrite pour Apache
 RUN a2enmod rewrite
@@ -20,8 +21,15 @@ WORKDIR /var/www/html
 # Copier tout le projet
 COPY . .
 
+# IMPORTANT : forcer l'environnement en production avant l'installation
+ENV APP_ENV=prod
+ENV APP_DEBUG=0
+
 # Installer les dépendances PHP (sans les paquets de dev)
-RUN composer install --no-dev --optimize-autoloader
+RUN composer install --no-dev --optimize-autoloader --no-scripts
+
+# Vider et réchauffer le cache manuellement en mode prod
+RUN php bin/console cache:clear --env=prod --no-debug
 
 # Configurer Apache pour pointer vers le dossier public/
 RUN sed -i 's!/var/www/html!/var/www/html/public!g' /etc/apache2/sites-available/000-default.conf
