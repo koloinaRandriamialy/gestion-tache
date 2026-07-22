@@ -3,7 +3,7 @@
 **Nom** : RANDRIAMIALY JOHNNE Koloina Jacquie
 **Matricule** : 352/L1A/25-26
 **Classe** : L1A
-**Sujet choisi** : Création d'une application permettant d'ajouter, modifier et 
+**Sujet choisi** : Sujet 5: Création d'une application permettant d'ajouter, modifier et 
 supprimer une tâche, définir une propriété, changer le statut et affecter une 
 tâche à un utilisateur en Symfony
 
