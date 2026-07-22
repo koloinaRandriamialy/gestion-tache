@@ -46,6 +46,10 @@ RUN php bin/console cache:clear --env=prod --no-debug
 # Donner les bonnes permissions
 RUN chown -R www-data:www-data /var/www/html/var
 
-EXPOSE 80
+# Copier et rendre exécutable le script d'entrée
+COPY entrypoint.sh /usr/local/bin/entrypoint.sh
+RUN chmod +x /usr/local/bin/entrypoint.sh && \
+    sed -i 's/\r$//' /usr/local/bin/entrypoint.sh
 
-CMD ["apache2-foreground"]
+EXPOSE 80
+ENTRYPOINT ["entrypoint.sh"]
