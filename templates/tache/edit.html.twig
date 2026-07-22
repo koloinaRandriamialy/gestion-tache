@@ -1,0 +1,81 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Modifier une tâche{% endblock %}
+
+{% block body %}
+    <div class="row justify-content-center">
+        <div class="col-md-8 col-lg-6">
+            <div class="card shadow-sm">
+                <div class="card-body p-4">
+                    <h1 class="h4 mb-4">
+                        <i class="bi bi-pencil-square text-primary"></i> Modifier la tâche
+                    </h1>
+
+                    <p class="text-muted small">
+                        <i class="bi bi-calendar-event"></i> Créée le {{ tache.dataCreation ? tache.dataCreation|date('d/m/Y') : '' }}
+                    </p>
+
+                    {{ form_start(form, {'attr': {'class': 'needs-validation'}}) }}
+
+                        <div class="mb-3">
+                            {{ form_label(form.titre, 'Titre', {'label_attr': {'class': 'form-label fw-semibold'}}) }}
+                            {{ form_widget(form.titre, {'attr': {'class': 'form-control'}}) }}
+                            {{ form_errors(form.titre) }}
+                        </div>
+
+                        <div class="mb-3">
+                            {{ form_label(form.description, 'Description', {'label_attr': {'class': 'form-label fw-semibold'}}) }}
+                            {{ form_widget(form.description, {'attr': {'class': 'form-control', 'rows': 4}}) }}
+                            {{ form_errors(form.description) }}
+                        </div>
+
+                        <div class="mb-3">
+                            {{ form_label(form.dataEcheance, 'Échéance', {'label_attr': {'class': 'form-label fw-semibold'}}) }}
+                            {{ form_widget(form.dataEcheance, {'attr': {'class': 'form-control'}}) }}
+                            {{ form_errors(form.dataEcheance) }}
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                {{ form_label(form.priorite, 'Priorité', {'label_attr': {'class': 'form-label fw-semibold'}}) }}
+                                {{ form_widget(form.priorite, {'attr': {'class': 'form-select'}}) }}
+                                {{ form_errors(form.priorite) }}
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                {{ form_label(form.statut, 'Statut', {'label_attr': {'class': 'form-label fw-semibold'}}) }}
+                                {{ form_widget(form.statut, {'attr': {'class': 'form-select'}}) }}
+                                {{ form_errors(form.statut) }}
+                            </div>
+                        </div>
+
+                        <div class="mb-4">
+                            {{ form_label(form.assigneA, 'Assigné à', {'label_attr': {'class': 'form-label fw-semibold'}}) }}
+                            {{ form_widget(form.assigneA, {'attr': {'class': 'form-select'}}) }}
+                            {{ form_errors(form.assigneA) }}
+                        </div>
+
+                        <div class="d-flex justify-content-between">
+                            <a href="{{ path('app_tache_index') }}" class="btn btn-outline-secondary">
+                                <i class="bi bi-arrow-left"></i> Annuler
+                            </a>
+                            <button type="submit" class="btn btn-primary">
+                                <i class="bi bi-check-lg"></i> Mettre à jour
+                            </button>
+                        </div>
+
+                    {{ form_end(form) }}
+
+                    {% if is_granted('ROLE_ADMIN') %}
+                        <hr class="my-4">
+                        <form method="post" action="{{ path('app_tache_delete', {'id': tache.id}) }}" onsubmit="return confirm('Supprimer définitivement cette tâche ?');">
+                            <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ tache.id) }}">
+                            <button class="btn btn-outline-danger w-100">
+                                <i class="bi bi-trash"></i> Supprimer cette tâche
+                            </button>
+                        </form>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

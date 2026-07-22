@@ -1,0 +1,90 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Détail de la tâche{% endblock %}
+
+{% block body %}
+    <div class="row justify-content-center">
+        <div class="col-md-8 col-lg-6">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <h1 class="h4 mb-0">
+                    <i class="bi bi-card-checklist text-primary"></i> Détail de la tâche
+                </h1>
+                <span class="badge rounded-pill bg-{{ tache.statut == 'terminee' ? 'success' : (tache.statut == 'en_cours' ? 'info text-dark' : 'secondary') }} fs-6">
+                    {{ tache.statut|replace({'_': ' '}) }}
+                </span>
+            </div>
+
+            <div class="card shadow-sm">
+                <div class="card-body p-0">
+                    <table class="table table-borderless mb-0">
+                        <tbody>
+                            <tr>
+                                <th class="ps-4 py-3 text-muted" style="width: 40%;">Id</th>
+                                <td class="py-3">{{ tache.id }}</td>
+                            </tr>
+                            <tr>
+                                <th class="ps-4 py-3 text-muted">Titre</th>
+                                <td class="py-3 fw-semibold">{{ tache.titre }}</td>
+                            </tr>
+                            <tr>
+                                <th class="ps-4 py-3 text-muted">Description</th>
+                                <td class="py-3">{{ tache.description }}</td>
+                            </tr>
+                            <tr>
+                                <th class="ps-4 py-3 text-muted">Date de création</th>
+                                <td class="py-3">
+                                    <i class="bi bi-calendar-event"></i>
+                                    {{ tache.dataCreation ? tache.dataCreation|date('d/m/Y') : '' }}
+                                </td>
+                            </tr>
+                            <tr>
+                                <th class="ps-4 py-3 text-muted">Échéance</th>
+                                <td class="py-3">
+                                    <i class="bi bi-calendar-check"></i>
+                                    {{ tache.dataEcheance ? tache.dataEcheance|date('d/m/Y') : '—' }}
+                                </td>
+                            </tr>
+                            <tr>
+                                <th class="ps-4 py-3 text-muted">Priorité</th>
+                                <td class="py-3">
+                                    <span class="badge rounded-pill bg-{{ tache.priorite == 'urgente' ? 'dark' : (tache.priorite == 'haute' ? 'danger' : (tache.priorite == 'moyenne' ? 'warning text-dark' : 'secondary')) }}">
+                                        {{ tache.priorite }}
+                                    </span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th class="ps-4 py-3 text-muted">Assigné à</th>
+                                <td class="py-3">
+                                    {% if tache.assigneA %}
+                                        <i class="bi bi-person-fill text-primary"></i> {{ tache.assigneA.email }}
+                                    {% else %}
+                                        <span class="text-muted fst-italic">Non assignée</span>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="d-flex justify-content-between mt-4">
+                <a href="{{ path('app_tache_index') }}" class="btn btn-outline-secondary">
+                    <i class="bi bi-arrow-left"></i> Retour à la liste
+                </a>
+                <div>
+                    <a href="{{ path('app_tache_edit', {'id': tache.id}) }}" class="btn btn-primary">
+                        <i class="bi bi-pencil"></i> Modifier
+                    </a>
+                    {% if is_granted('ROLE_ADMIN') %}
+                        <form method="post" action="{{ path('app_tache_delete', {'id': tache.id}) }}" onsubmit="return confirm('Supprimer définitivement cette tâche ?');" class="d-inline">
+                            <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ tache.id) }}">
+                            <button class="btn btn-outline-danger">
+                                <i class="bi bi-trash"></i> Supprimer
+                            </button>
+                        </form>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
