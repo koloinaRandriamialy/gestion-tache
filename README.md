@@ -32,6 +32,9 @@ Application web développée avec Symfony permettant la gestion complète de tâ
 - Filtrage "Mes tâches" vs "Toutes les tâches"
 - Tri automatique par priorité
 - Interface responsive et moderne
+- Gestion des rôles : seuls les utilisateurs ayant le rôle **ROLE_ADMIN** 
+  peuvent supprimer une tâche (les utilisateurs standards peuvent créer, 
+  modifier, changer le statut et s'assigner des tâches)
 
 ## Déploiement
 
