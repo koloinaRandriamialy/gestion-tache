@@ -12,6 +12,18 @@ RUN apt-get update && apt-get install -y \
 # Activer mod_rewrite pour Apache
 RUN a2enmod rewrite
 
+# Configuration Apache : pointer le DocumentRoot vers public/
+RUN echo '<VirtualHost *:80>\n\
+    DocumentRoot /var/www/html/public\n\
+    <Directory /var/www/html/public>\n\
+        AllowOverride All\n\
+        Require all granted\n\
+        FallbackResource /index.php\n\
+    </Directory>\n\
+    ErrorLog ${APACHE_LOG_DIR}/error.log\n\
+    CustomLog ${APACHE_LOG_DIR}/access.log combined\n\
+</VirtualHost>' > /etc/apache2/sites-available/000-default.conf
+
 # Copier Composer depuis l'image officielle
 COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 
@@ -30,10 +42,6 @@ RUN composer install --no-dev --optimize-autoloader --no-scripts
 
 # Vider et réchauffer le cache manuellement en mode prod
 RUN php bin/console cache:clear --env=prod --no-debug
-
-# Configurer Apache pour pointer vers le dossier public/
-RUN sed -i 's!/var/www/html!/var/www/html/public!g' /etc/apache2/sites-available/000-default.conf
-RUN sed -i 's!/var/www/!/var/www/html/public!g' /etc/apache2/apache2.conf
 
 # Donner les bonnes permissions
 RUN chown -R www-data:www-data /var/www/html/var
