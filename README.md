@@ -33,3 +33,10 @@ Application web développée avec Symfony permettant la gestion complète de tâ
 - Tri automatique par priorité
 - Interface responsive et moderne
 
+## Déploiement
+
+L'application est déployée sur Render : 
+https://gestion-tache-t91y.onrender.com
+
+Note : le plan gratuit met le service en veille après inactivité. 
+La première visite peut prendre 30 à 60 secondes à charger.
